@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <direct.h>
+#include <stdio.h>
 
 #include <winsock2.h>
 #include <windows.h>
@@ -82,20 +83,30 @@ char *realpath(const char *path, char *resolved_path)
 static __inline
 char *basename(const char *path)
 {
-    char *p =  strrchr(path, '\\');
-    if(!p)
-      p =  strrchr(path, '/');
+    static char base[_MAX_FNAME + _MAX_EXT];
+    char fname[_MAX_FNAME];
+    char ext[_MAX_EXT];
+    errno_t err;
+    int rc;
 
-    return p ?  p + 1 : (char *)path;
+    err = _splitpath_s(path, NULL, 0, NULL, 0,
+                       fname, sizeof(fname), ext, sizeof(ext));
+    if (err)
+        return NULL;
+
+    rc = snprintf(base, sizoef(base), "%s%s", fname, ext);
+    return rc >= sizeof(base) ? NULL : base;
 }
 
 static __inline
 char *dirname(const char *path)
 {
-    char dir[PATH_MAX];
-    _splitpath( path, NULL, dir, NULL, NULL );
+    static char dir[_MAX_DIR];
+    errno_t rc;
 
-    return dir;
+    rc = _splitpath_s(path, NULL, 0, dir, sizeof(dir),
+                      NULL, 0, NULL, 0);
+    return rc ? NULL : dir;
 }
 
 #ifdef __cplusplus
