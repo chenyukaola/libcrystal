@@ -82,7 +82,19 @@ static __inline
 char *basename(const char *path)
 {
     char *p =  strrchr(path, '\\');
+    if(!p)
+      p =  strrchr(path, '/');
+
     return p ?  p + 1 : (char *)path;
+}
+
+static __inline
+char *dirname(const char *path)
+{
+    char dir[PATH_MAX];
+    _splitpath( path, NULL, dir, NULL, NULL );
+
+    return dir;
 }
 
 #ifdef __cplusplus
