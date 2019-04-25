@@ -33,6 +33,7 @@ typedef long int        suseconds_t;
 #define X_OK            R_OK
 
 #define PATH_MAX       MAX_PATH
+#define MAXPATHLEN     MAX_PATH
 
 #define mkdir(dir, mode)        _mkdir(dir)
 
