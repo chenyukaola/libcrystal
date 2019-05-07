@@ -83,6 +83,7 @@ char *realpath(const char *path, char *resolved_path)
 static __inline
 char *basename(const char *path)
 {
+<<<<<<< HEAD
     static char base[_MAX_FNAME + _MAX_EXT + 1];
     char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT + 1];
     char fname[_MAX_FNAME + 1];
@@ -101,6 +102,24 @@ char *basename(const char *path)
     memcpy(fpath, path, len+1);
     if ( len > 1 && ( path[len-1] == '/' || path[len-1] == '\\') )
       fpath[len-1] = '\0';
+=======
+    static char base[_MAX_FNAME + _MAX_EXT];
+    static char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT];
+    char fname[_MAX_FNAME];
+    char ext[_MAX_EXT];
+    errno_t err;
+    int rc;
+    int len;
+
+    len = (int)strlen(path);
+    if ( len != 1 && ( path[len-1] == '/' || path[len-1] == '\\'))
+    {
+      strncpy(fpath, path, len-1);
+      fpath[len-1] = '\0';
+    }
+    else
+      strcpy(fpath, path);
+>>>>>>> modify 'dirname' and 'basename'
 
     err = _splitpath_s(fpath, NULL, 0, NULL, 0,
                        fname, sizeof(fname), ext, sizeof(ext));
@@ -110,10 +129,12 @@ char *basename(const char *path)
     rc = snprintf(base, sizeof(base), "%s%s", fname, ext);
     return rc < 0 || rc >= sizeof(base) ? NULL : base;
 }
+}
 
 static __inline
 char *dirname(const char *path)
 {
+<<<<<<< HEAD
     static char dir[_MAX_DIR + 1];
     char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT + 1];
     size_t len;
@@ -129,6 +150,21 @@ char *dirname(const char *path)
     memcpy(fpath, path, len+1);
     if ( len > 1 && ( path[len-1] == '/' || path[len-1] == '\\') )
       fpath[len-1] = '\0';
+=======
+    static char dir[_MAX_DIR];
+    static char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT];
+    int len;
+    errno_t rc;
+
+    len = (int)strlen(path);
+    if ( len != 1 && ( path[len-1] == '/' || path[len-1] == '\\'))
+    {
+      strncpy(fpath, path, len-1);
+      fpath[len-1] = '\0';
+    }
+    else
+      strcpy(fpath, path);
+>>>>>>> modify 'dirname' and 'basename'
 
     rc = _splitpath_s(fpath, NULL, 0, dir, sizeof(dir),
                       NULL, 0, NULL, 0);
