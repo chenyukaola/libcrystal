@@ -97,7 +97,7 @@ char *basename(const char *path)
     len = (int)strlen(path);
 
     memcpy(fpath, path, len+1);
-    if ( len > 1 && ( path[len-1] == '/' || path[len-1] == '\\') )
+    if ( len > 1 && ( path[len-1] == '/' || path[len-1] == '\\'))
       fpath[len-1] = '\0';
 
     err = _splitpath_s(fpath, NULL, 0, NULL, 0,
@@ -123,7 +123,7 @@ char *dirname(const char *path)
     len = (int)strlen(path);
 
     memcpy(fpath, path, len+1);
-    if ( len > 1 && ( path[len-1] == '/' || path[len-1] == '\\') )
+    if ( len > 1 && ( path[len-1] == '/' || path[len-1] == '\\'))
       fpath[len-1] = '\0';
 
     rc = _splitpath_s(fpath, NULL, 0, dir, sizeof(dir),
