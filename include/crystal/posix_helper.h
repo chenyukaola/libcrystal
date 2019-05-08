@@ -83,19 +83,19 @@ char *realpath(const char *path, char *resolved_path)
 static __inline
 char *basename(const char *path)
 {
-    static char base[_MAX_FNAME + _MAX_EXT];
-    char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT];
-    char fname[_MAX_FNAME];
-    char ext[_MAX_EXT];
+    static char base[_MAX_FNAME + _MAX_EXT + 1];
+    char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT + 1];
+    char fname[_MAX_FNAME + 1];
+    char ext[_MAX_EXT + 1];
     errno_t err;
     int rc;
-    int len;
+    size_t len;
 
     if(!path)
       return ".";
 
-    len = (int)strlen(path);
-    if (len > _MAX_DIR + _MAX_FNAME + _MAX_EXT - 1 )
+    len = strlen(path);
+    if (len >= sizeof(fpath))
       return NULL;
 
     memcpy(fpath, path, len+1);
@@ -114,16 +114,16 @@ char *basename(const char *path)
 static __inline
 char *dirname(const char *path)
 {
-    static char dir[_MAX_DIR];
-    char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT];
-    int len;
+    static char dir[_MAX_DIR + 1];
+    char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT + 1];
+    size_t len;
     errno_t rc;
 
     if(!path)
       return ".";
 
-    len = (int)strlen(path);
-    if (len > _MAX_DIR + _MAX_FNAME + _MAX_EXT - 1 )
+    len = strlen(path);
+    if (len >= sizeof(fpath))
       return NULL;
 
     memcpy(fpath, path, len+1);
