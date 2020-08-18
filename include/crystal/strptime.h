@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018 iwhisper.io
+ * Copyright (c) 2020 Elastos Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,31 +20,21 @@
  * SOFTWARE.
  */
 
-#ifndef __CRYSTAL_H__
-#define __CRYSTAL_H__
+#ifndef __STRPTIME_H__
+#define __STRPTIME_H__
 
-#include <crystal/crystal_config.h>
-#include <crystal/bitset.h>
-#include <crystal/ids_heap.h>
-#include <crystal/linkedhashtable.h>
-#include <crystal/linkedlist.h>
-#include <crystal/rc_mem.h>
-#include <crystal/socket.h>
-#include <crystal/spopen.h>
-#include <crystal/time_util.h>
-#include <crystal/timerheap.h>
-#include <crystal/vlog.h>
-@INCLUDE_CRYPTO_H_STRING@
-@INCLUDE_BASE58_H_STRING@
+#include <string.h>
+#include <time.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#include <crystal/builtins.h>
-#include <crystal/gettimeofday.h>
-#include <crystal/posix_helper.h>
-#include <crystal/getopt.h>
-#include <crystal/strptime.h>
-#elif defined(__ANDROID__)
-#include <crystal/ifaddrs.h>
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#endif /* __CRYSTAL_H__ */
+CRYSTAL_API
+char *strptime(const char *buf, const char *fmt, struct tm *tm);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif //__STRPTIME_H__

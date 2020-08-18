@@ -6,10 +6,13 @@
 #include <string.h>
 #include <direct.h>
 #include <stdio.h>
+#include <time.h>
+#include <malloc.h>
 
 #include <winsock2.h>
 #include <windows.h>
 #include <crystal/gettimeofday.h>
+#include <sys/utime.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,6 +40,10 @@ typedef long int        suseconds_t;
 #define MAXPATHLEN     MAX_PATH
 
 #define mkdir(dir, mode)        _mkdir(dir)
+#define rmdir(dir)              _rmdir(dir)
+#define getcwd(buf, size)       _getcwd(buf, size)
+
+#define alloca(size)            _alloca(size)
 
 #define fsync(fd)               _commit(fd)
 
@@ -52,6 +59,10 @@ typedef long int        suseconds_t;
 #define sleep(s)                Sleep((DWORD)((s) * 1000))
 
 #define timerisset(tvp)        ((tvp)->tv_sec || (tvp)->tv_usec)
+#define timegm(tm)             _mkgmtime(tm)
+#define utimbuf                _utimbuf
+#define utime(file, times)     _utime(file, times)
+#define gmtime_r(a, b)         gmtime_s(b, a)
 
 #define timeradd(a, b, result)                                                \
   do {                                                                        \
@@ -83,7 +94,6 @@ char *realpath(const char *path, char *resolved_path)
 static __inline
 char *basename(const char *path)
 {
-<<<<<<< HEAD
     static char base[_MAX_FNAME + _MAX_EXT + 1];
     char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT + 1];
     char fname[_MAX_FNAME + 1];
@@ -102,24 +112,6 @@ char *basename(const char *path)
     memcpy(fpath, path, len+1);
     if ( len > 1 && ( path[len-1] == '/' || path[len-1] == '\\') )
       fpath[len-1] = '\0';
-=======
-    static char base[_MAX_FNAME + _MAX_EXT];
-    static char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT];
-    char fname[_MAX_FNAME];
-    char ext[_MAX_EXT];
-    errno_t err;
-    int rc;
-    int len;
-
-    len = (int)strlen(path);
-    if ( len != 1 && ( path[len-1] == '/' || path[len-1] == '\\'))
-    {
-      strncpy(fpath, path, len-1);
-      fpath[len-1] = '\0';
-    }
-    else
-      strcpy(fpath, path);
->>>>>>> modify 'dirname' and 'basename'
 
     err = _splitpath_s(fpath, NULL, 0, NULL, 0,
                        fname, sizeof(fname), ext, sizeof(ext));
@@ -129,12 +121,10 @@ char *basename(const char *path)
     rc = snprintf(base, sizeof(base), "%s%s", fname, ext);
     return rc < 0 || rc >= sizeof(base) ? NULL : base;
 }
-}
 
 static __inline
 char *dirname(const char *path)
 {
-<<<<<<< HEAD
     static char dir[_MAX_DIR + 1];
     char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT + 1];
     size_t len;
@@ -150,21 +140,6 @@ char *dirname(const char *path)
     memcpy(fpath, path, len+1);
     if ( len > 1 && ( path[len-1] == '/' || path[len-1] == '\\') )
       fpath[len-1] = '\0';
-=======
-    static char dir[_MAX_DIR];
-    static char fpath[_MAX_DIR + _MAX_FNAME + _MAX_EXT];
-    int len;
-    errno_t rc;
-
-    len = (int)strlen(path);
-    if ( len != 1 && ( path[len-1] == '/' || path[len-1] == '\\'))
-    {
-      strncpy(fpath, path, len-1);
-      fpath[len-1] = '\0';
-    }
-    else
-      strcpy(fpath, path);
->>>>>>> modify 'dirname' and 'basename'
 
     rc = _splitpath_s(fpath, NULL, 0, dir, sizeof(dir),
                       NULL, 0, NULL, 0);
